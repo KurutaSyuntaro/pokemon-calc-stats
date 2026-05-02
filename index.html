@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ポケモン ステータス計算機 — チャンピオンズ・本家SV両対応">
+  <title>ステータス計算機</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>ステータス計算機</h1>
+    <div class="format-toggle" role="group" aria-label="計算形式">
+      <label class="toggle-label">
+        <input type="radio" name="format" value="champions" checked>
+        チャンピオンズ
+      </label>
+      <label class="toggle-label">
+        <input type="radio" name="format" value="sv">
+        本家SV (Lv50)
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <!-- Pokemon search -->
+    <div class="search-box">
+      <input type="text" id="pokemon-input" placeholder="ポケモン名を入力"
+             autocomplete="off" spellcheck="false">
+      <ul id="suggest-list" class="suggest-list" hidden></ul>
+    </div>
+
+    <!-- SV-only: IV -->
+    <div id="iv-row" class="iv-row" hidden>
+      <label>
+        個体値（全ステ共通）:
+        <input type="number" id="iv-input" value="31" min="0" max="31">
+      </label>
+    </div>
+
+    <!-- Stat table -->
+    <div class="table-wrapper">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>能力</th>
+            <th>実数値</th>
+            <th id="ev-label">能力ポイント</th>
+            <th>種族値</th>
+            <th>性格</th>
+          </tr>
+        </thead>
+        <tbody id="stat-rows"></tbody>
+      </table>
+    </div>
+
+    <!-- EV summary -->
+    <div class="ev-summary">
+      残り <span id="ev-remaining">66</span> / <span id="ev-total-display">66</span>
+    </div>
+
+    <!-- Share -->
+    <div class="share-area">
+      <button id="share-btn" class="share-btn">🔗 URLをコピー</button>
+      <span id="share-msg" class="share-msg" hidden>コピーしました！</span>
+    </div>
+  </main>
+
+  <footer>
+    <a href="https://kurutasyuntaro.github.io/pokemon-site/">← 構築一覧へ</a>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/calc.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
