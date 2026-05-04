@@ -3,6 +3,246 @@
 // ---- 定数 ----
 const STAT_KEYS  = ['H', 'A', 'B', 'C', 'D', 'S'];
 const STAT_LABEL = ['H', 'A', 'B', 'C', 'D', 'S'];
+const ARTWORK_URL =
+  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{}.png';
+
+// フォーム違い・表記ゆれで専用IDを使いたいもの
+const SPECIAL_FORM_SPRITE_ID = {
+  'メガリザードンY': 10035,
+  'メガリザードンＹ': 10035,
+  'メガリザードンX': 10034,
+  'メガリザードンＸ': 10034,
+  'メガゲンガー': 10038,
+  'メガボーマンダ': 10087,
+  'メガガルーラ': 10039,
+  'メガフーディン': 10037,
+  'メガフシギバナ': 10031,
+  'メガカメックス': 10032,
+  'メガヤドラン': 10071,
+  'メガピジョット': 10073,
+  'メガスピアー': 10090,
+  'メガガブリアス': 10058,
+  'メガハッサム': 10046,
+  'メガカイリュー': 10230,
+  'メガギャラドス': 10041,
+  'メガスコヴィラン': 10320,
+  'メガエアームド': 10094,
+  'メガキラフロル': 10271,
+  'メガニウム': 154,
+  'メガメガニウム': 154,
+  'ロトムW': 10008,
+  'ロトム (FC)': 10008,
+  'ウォッシュロトム': 10009,
+};
+
+// 通常種族ID（calc-stats の収録ポケモンを広くカバー）
+const BASE_SPRITE_ID = {
+  'アーボック': 24,
+  'アーマーガア': 823,
+  'アシレーヌ': 730,
+  'アップリュー': 841,
+  'アブソル': 359,
+  'アマージョ': 763,
+  'アマルルガ': 699,
+  'アヤシシ': 899,
+  'アリアドス': 168,
+  'イダイトウ': 902,
+  'イッカネズミ': 925,
+  'イルカマン': 964,
+  'ウインディ': 59,
+  'ウェーニバル': 914,
+  'ウツボット': 71,
+  'ウルガモス': 637,
+  'エアームド': 227,
+  'エーフィ': 196,
+  'エモンガ': 587,
+  'エルフーン': 547,
+  'エルレイド': 475,
+  'エレザード': 695,
+  'エンニュート': 758,
+  'エンブオー': 500,
+  'エンペルト': 395,
+  'オーダイル': 160,
+  'オオニューラ': 903,
+  'オーロット': 709,
+  'オニゴーリ': 362,
+  'オニシズクモ': 752,
+  'オンバーン': 715,
+  'カイリキー': 68,
+  'カイリュー': 149,
+  'カイロス': 127,
+  'ガオガエン': 727,
+  'ガチゴラス': 697,
+  'カバルドン': 450,
+  'カビゴン': 143,
+  'ガブリアス': 445,
+  'カミツオロチ': 1019,
+  'カメックス': 9,
+  'ガルーラ': 115,
+  'ギャラドス': 130,
+  'キュウコン': 38,
+  'キョジオーン': 934,
+  'キラフロル': 970,
+  'ギルガルド': 681,
+  'クエスパトラ': 956,
+  'グライオン': 472,
+  'グレイシア': 471,
+  'クレッフィ': 707,
+  'クレベース': 713,
+  'グレンアルマ': 936,
+  'ケケンカニ': 740,
+  'ゲッコウガ': 658,
+  'ゲンガー': 94,
+  'ケンタロス': 128,
+  'ゴウカザル': 392,
+  'コータス': 324,
+  'ゴルーグ': 623,
+  'ゴロンダ': 675,
+  'サーナイト': 282,
+  'サーフゴー': 1000,
+  'サザンドラ': 635,
+  'サダイジャ': 844,
+  'サメハダー': 319,
+  'サンダース': 135,
+  'ジジーロン': 780,
+  'ジャラランガ': 784,
+  'ジャローダ': 497,
+  'シャワーズ': 134,
+  'シャンデラ': 609,
+  'ジュナイパー': 724,
+  'ジュペッタ': 354,
+  'スコヴィラン': 952,
+  'スターミー': 121,
+  'スピアー': 15,
+  'ソウブレイズ': 937,
+  'ゾロアーク': 571,
+  'ダイケンキ': 503,
+  'ダストダス': 569,
+  'タブンネ': 531,
+  'タルップル': 842,
+  'チャーレム': 308,
+  'チリーン': 358,
+  'チルタリス': 334,
+  'ツンベアー': 614,
+  'デカヌチャン': 959,
+  'デスカーン': 563,
+  'デスバーン': 867,
+  'デデンネ': 702,
+  'デンリュウ': 181,
+  'ドクロッグ': 454,
+  'ドサイドン': 464,
+  'ドダイトス': 389,
+  'ドデカバシ': 733,
+  'ドドゲザン': 983,
+  'ドヒドイデ': 748,
+  'ドラパルト': 887,
+  'トリデプス': 411,
+  'トリミアン': 676,
+  'ドリュウズ': 530,
+  'ナゲツケサル': 766,
+  'ニャオニクス': 678,
+  'ニョロトノ': 186,
+  'ニンフィア': 700,
+  'ヌメルゴン': 706,
+  'バイバニラ': 584,
+  'バオッキー': 514,
+  'ハガネール': 208,
+  'バクーダ': 323,
+  'バクフーン': 157,
+  'バサギリ': 900,
+  'ハッサム': 212,
+  'ハラバリー': 939,
+  'バリコオル': 866,
+  'バンギラス': 248,
+  'バンバドロ': 750,
+  'パンプジン': 711,
+  'ピカチュウ': 25,
+  'ピクシー': 36,
+  'ピジョット': 18,
+  'ビビヨン': 666,
+  'ヒヤッキー': 516,
+  'ファイアロー': 663,
+  'ブースター': 136,
+  'フーディン': 65,
+  'フォレトス': 205,
+  'フシギバナ': 3,
+  'プテラ': 142,
+  'フラージェス': 671,
+  'フラエッテ': 670,
+  'ブラッキー': 197,
+  'ブリガロン': 652,
+  'ブリジュラス': 1018,
+  'ブリムオン': 858,
+  'フレフワン': 683,
+  'ブロスター': 693,
+  'ヘラクロス': 214,
+  'ペリッパー': 279,
+  'ヘルガー': 229,
+  'ペロリーム': 685,
+  'ボスゴドラ': 306,
+  'ポットデス': 855,
+  'ホルード': 660,
+  'ポワルン': 351,
+  'マスカーニャ': 908,
+  'マッギョ': 618,
+  'マニューラ': 461,
+  'マフォクシー': 655,
+  'マホイップ': 869,
+  'マリルリ': 184,
+  'マンムー': 473,
+  'ミカルゲ': 442,
+  'ミミズズ': 968,
+  'ミミッキュ': 778,
+  'ミミロップ': 428,
+  'ミルホッグ': 505,
+  'ミロカロス': 350,
+  'メタモン': 132,
+  'モルペコ': 877,
+  'ヤドキング': 199,
+  'ヤドラン': 80,
+  'ヤナッキー': 512,
+  'ヤバソチャ': 1013,
+  'ヤミラミ': 302,
+  'ヤレユータン': 765,
+  'ユキノオー': 460,
+  'ユキメノコ': 478,
+  'ライチュウ': 26,
+  'ライボルト': 310,
+  'ラウドボーン': 911,
+  'ラムパルド': 409,
+  'ランクルス': 579,
+  'リーフィア': 470,
+  'リキキリン': 981,
+  'リザードン': 6,
+  'ルカリオ': 448,
+  'ルガルガン': 745,
+  'ルチャブル': 701,
+  'レパルダス': 510,
+  'レントラー': 405,
+  'ローブシン': 534,
+  'ロズレイド': 407,
+  'ロトム': 479,
+  'ワルビアル': 553,
+};
+
+function normalizePokemonName(name) {
+  return String(name || '')
+    .replace(/\s+/g, '')
+    .replace(/（[^）]*）/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .replace(/[♂♀]/g, '');
+}
+
+function toSpriteRules(map) {
+  return Object.entries(map)
+    .map(([name, id]) => ({ key: normalizePokemonName(name), id }))
+    .sort((a, b) => b.key.length - a.key.length);
+}
+
+const SPECIAL_SPRITE_RULES = toSpriteRules(SPECIAL_FORM_SPRITE_ID);
+const BASE_SPRITE_RULES = toSpriteRules(BASE_SPRITE_ID);
+const SPECIAL_EXACT_ID = Object.fromEntries(SPECIAL_SPRITE_RULES.map(r => [r.key, r.id]));
+const BASE_EXACT_ID = Object.fromEntries(BASE_SPRITE_RULES.map(r => [r.key, r.id]));
 
 // ---- State ----
 const state = {
@@ -46,6 +286,44 @@ let baseInputs = [];
 let natureBtns = []; // [idx][type] = button
 
 function getEl(id) { return document.getElementById(id); }
+
+function findSpriteId(name) {
+  const normalized = normalizePokemonName(name);
+
+  for (const rule of SPECIAL_SPRITE_RULES) {
+    if (normalized.includes(rule.key)) return rule.id;
+  }
+  for (const rule of BASE_SPRITE_RULES) {
+    if (normalized.includes(rule.key)) return rule.id;
+  }
+
+  if (normalized.startsWith('メガ')) {
+    const stripped = normalized.slice(2);
+    if (SPECIAL_EXACT_ID[stripped]) return SPECIAL_EXACT_ID[stripped];
+    if (BASE_EXACT_ID[stripped]) return BASE_EXACT_ID[stripped];
+  }
+  return null;
+}
+
+function renderSprite(name) {
+  const preview = getEl('pokemon-preview');
+  const img = getEl('pokemon-sprite');
+  const label = getEl('pokemon-preview-name');
+  const spriteId = findSpriteId(name);
+
+  if (!spriteId) {
+    preview.hidden = true;
+    img.removeAttribute('src');
+    img.alt = '';
+    label.textContent = '';
+    return;
+  }
+
+  img.src = ARTWORK_URL.replace('{}', String(spriteId));
+  img.alt = name;
+  label.textContent = `${name} (ID: ${spriteId})`;
+  preview.hidden = false;
+}
 
 // ---- Build table rows ----
 function buildTable() {
@@ -269,6 +547,7 @@ function applyPokemon(p) {
   state.bases = [p[1], p[2], p[3], p[4], p[5], p[6]];
   baseInputs.forEach((inp, idx) => { inp.value = state.bases[idx]; });
   getEl('suggest-list').hidden = true;
+  renderSprite(p[0]);
   refreshAllStats();
   updateEvSummary();
 }
@@ -355,7 +634,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Pokemon search
   const nameIn = getEl('pokemon-input');
-  nameIn.addEventListener('input', () => buildSuggestList(nameIn.value.trim()));
+  nameIn.addEventListener('input', () => {
+    const name = nameIn.value.trim();
+    buildSuggestList(name);
+    if (!name) renderSprite('');
+  });
   nameIn.addEventListener('blur',  () => setTimeout(() => { getEl('suggest-list').hidden = true; }, 150));
   nameIn.addEventListener('focus', () => { if (nameIn.value) buildSuggestList(nameIn.value.trim()); });
 

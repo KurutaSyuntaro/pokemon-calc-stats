@@ -119,6 +119,30 @@ main {
   background: var(--surface2);
 }
 
+.pokemon-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius);
+}
+
+.pokemon-preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  background: var(--bg);
+  border-radius: 6px;
+  border: 1px solid var(--surface2);
+}
+
+#pokemon-preview-name {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
 /* ---- IV row ---- */
 .iv-row {
   display: flex;
